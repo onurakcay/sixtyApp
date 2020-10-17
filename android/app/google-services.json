@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1096361749988",
+    "firebase_url": "https://sixtyseconds-bba75.firebaseio.com",
+    "project_id": "sixtyseconds-bba75",
+    "storage_bucket": "sixtyseconds-bba75.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1096361749988:android:ff7802f88ba53b92d56bf1",
+        "android_client_info": {
+          "package_name": "com.example.sixtyseconds"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1096361749988-kn2m9ri23ge1te7930g88rs6m0q7ddl8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.sixtyseconds",
+            "certificate_hash": "f6a616eda19c97d484ede183641ec7276c675a85"
+          }
+        },
+        {
+          "client_id": "1096361749988-mb8q3fcsc10j1jrd52euph9ohafursor.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPJhVZkMuEGKDPb0olcybtdDCvOV7A5oU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1096361749988-mb8q3fcsc10j1jrd52euph9ohafursor.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
