@@ -1,13 +1,10 @@
-import 'package:connectivity_wrapper/connectivity_wrapper.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/BottomNavigation/customBottomNavigation.dart';
 import 'package:sixtyseconds/Screens/BottomNavigation/tab_items.dart';
 import 'package:sixtyseconds/Screens/konusmalarim.dart';
 import 'package:sixtyseconds/Screens/kullanicilar.dart';
 import 'package:sixtyseconds/Screens/profil.dart';
-import 'package:sixtyseconds/viewModel/userModel.dart';
 
 class HomePage extends StatefulWidget {
   final MyUserClass user;

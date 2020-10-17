@@ -39,15 +39,13 @@ dependencies:
   google_sign_in: ^4.5.4
   image_picker: ^0.6.7+11
   intl: ^0.16.1
-  liquid_pull_to_refresh: ^2.0.0
   provider: ^4.3.2+2
   smart_select: ^4.3.2
   sticky_headers: ^0.1.8
   timeago: ^2.0.27
   video_player: ^0.11.0
   skeleton_text: ^1.0.0
-  connection_status_bar: ^1.1.4
-  connectivity_wrapper: ^1.0.4
+  flutter_offline: ^0.3.0
 
 dev_dependencies:
   flutter_test:
