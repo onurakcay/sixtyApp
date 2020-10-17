@@ -1,6 +1,7 @@
 import 'package:sixtyseconds/Model/chat_model.dart';
 import 'package:sixtyseconds/Model/message.dart';
 import 'package:sixtyseconds/Model/user.dart';
+import 'package:sixtyseconds/viewModel/userModel.dart';
 
 abstract class DbBase {
   Future<bool> saveUser(MyUserClass user, String age, String gender,
@@ -8,7 +9,7 @@ abstract class DbBase {
   Future<MyUserClass> readUser(String userID);
   Future<bool> updateUserName(String userID, String yeniUserName);
   Future<bool> updateProfilePhoto(String userID, String profilFotoURL);
-  Future<List<MyUserClass>> getAllUsers();
+  Future<List<MyUserClass>> getAllUsers(UserModel currentUser);
   Future<List<Chat>> getAllChats(String userID);
   Stream<List<Message>> getMessages(String curretUserID, String chattingUserID);
   Future<bool> saveMessage(Message saveMessage);

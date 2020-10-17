@@ -10,6 +10,7 @@ import 'package:sixtyseconds/Services/firebase_auth_service.dart';
 import 'package:sixtyseconds/Services/firebase_storage_service.dart';
 import 'package:sixtyseconds/Services/firestore_db_service.dart';
 import 'package:sixtyseconds/locator.dart';
+import 'package:sixtyseconds/viewModel/userModel.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 enum AppMode { DEBUG, RELEASE }
@@ -150,11 +151,11 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<List<MyUserClass>> getAllUsers() async {
+  Future<List<MyUserClass>> getAllUsers(UserModel currentUser) async {
     if (appmode == AppMode.DEBUG) {
       return [];
     } else {
-      tumKullaniciListesi = await _fireStoreDbService.getAllUsers();
+      tumKullaniciListesi = await _fireStoreDbService.getAllUsers(currentUser);
       return tumKullaniciListesi;
     }
   }

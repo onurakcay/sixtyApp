@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class MyUserClass {
   final String userID;
-  String email, userName, profileURL, name, surname, gender;
+  String email, userName, profileURL, name, surname, gender, interest;
   DateTime createdAt, updatedAt;
   int level, age;
   MyUserClass({@required this.userID, @required this.email});
@@ -46,6 +46,7 @@ class MyUserClass {
         surname = map['surname'],
         age = map['age'],
         level = map['level'],
+        interest = map['interest'],
         gender = map['gender'],
         createdAt = (map['createdAt'] as Timestamp).toDate(),
         updatedAt = (map['updatedAt'] as Timestamp).toDate();
@@ -57,6 +58,6 @@ class MyUserClass {
 
   @override
   String toString() {
-    return 'MyUserClass{userID: $userID, email: $email, userName: $userName, profileURL: $profileURL, name: $name, surname: $surname, gender: $gender, createdAt: $createdAt, updatedAt: $updatedAt, level: $level, age: $age}';
+    return 'MyUserClass{userID: $userID, email: $email, userName: $userName, profileURL: $profileURL, name: $name, surname: $surname, gender: $gender, createdAt: $createdAt, updatedAt: $updatedAt, level: $level, age: $age, interest: $interest}';
   }
 }

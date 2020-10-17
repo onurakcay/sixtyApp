@@ -20,11 +20,11 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
         title: Text("Kullanicilar"),
       ),
       body: FutureBuilder<List<MyUserClass>>(
-        future: _userModel.getAllUser(),
+        future: _userModel.getAllUser(_userModel),
         builder: (context, sonuc) {
           if (sonuc.hasData) {
             var tumKullanicilar = sonuc.data;
-            if (tumKullanicilar.length - 1 > 0) {
+            if (tumKullanicilar.length > 0) {
               print("TUM KULLANICILAR: " + tumKullanicilar.length.toString());
               return RefreshIndicator(
                 onRefresh: _refreshUsers,

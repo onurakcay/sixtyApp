@@ -47,8 +47,8 @@ class UserModel with ChangeNotifier implements AuthBase {
     }
   }
 
-  Future<List<MyUserClass>> getAllUser() async {
-    var tumKullaniciListesi = await _userRepository.getAllUsers();
+  Future<List<MyUserClass>> getAllUser(UserModel currentUser) async {
+    var tumKullaniciListesi = await _userRepository.getAllUsers(currentUser);
     return tumKullaniciListesi;
   }
 

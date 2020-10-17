@@ -1,8 +1,12 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Model/chat_model.dart';
 import 'package:sixtyseconds/Model/message.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Services/db_base.dart';
+import 'package:sixtyseconds/viewModel/userModel.dart';
 
 class FireStoreDbService implements DbBase {
   final FirebaseFirestore _fireStore = FirebaseFirestore.instance;
@@ -35,7 +39,8 @@ class FireStoreDbService implements DbBase {
     Map<String, dynamic> _okunanUserBilgilerMap = _okunanUser.data();
     MyUserClass _okunanUserNesnesi =
         MyUserClass.fromMap(_okunanUserBilgilerMap);
-    print("ReadUser Okunan user nesnesi: " + _okunanUserNesnesi.toString());
+    // print("ReadUser Okunan user nesnesi: " + _okunanUserNesnesi.toString());
+    // print("OkunanUSER: " + _okunanUserBilgilerMap.toString());
     return _okunanUserNesnesi;
   }
 
@@ -78,18 +83,67 @@ class FireStoreDbService implements DbBase {
   }
 
   @override
-  Future<List<MyUserClass>> getAllUsers() async {
-    QuerySnapshot querySnapshot = await _fireStore.collection("users").get();
+  Future<List<MyUserClass>> getAllUsers(UserModel currentUser) async {
+    QuerySnapshot querySnapshot = await _fireStore
+        .collection("users")
+        .where("gender", isEqualTo: currentUser.user.interest.toString())
+        .get();
+
     List<MyUserClass> tumKullanicilar = [];
     for (DocumentSnapshot tekUser in querySnapshot.docs) {
       MyUserClass _tekUser = MyUserClass.fromMap(tekUser.data());
       tumKullanicilar.add(_tekUser);
     }
+
+    var rnd = Random();
+
+    var pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
+
+    QuerySnapshot randomlyPickedUser = await _fireStore
+        .collection("users")
+        .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
+        .where("gender", isEqualTo: currentUser.user.interest.toString())
+        .get();
+    print("CURRENT USER ilgi" + currentUser.user.interest);
+    MyUserClass _tekTek;
+    while (true) {
+      for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
+        _tekTek = MyUserClass.fromMap(tekUser.data());
+      }
+      if (_tekTek.userID != currentUser.user.userID) {
+        break;
+      } else {
+        pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
+        randomlyPickedUser = await _fireStore
+            .collection("users")
+            .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
+            .where("gender", isEqualTo: currentUser.user.interest.toString())
+            .get();
+      }
+    }
+
+    List<MyUserClass> randomlySelectedUserList = [];
+    for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
+      MyUserClass _tekUser = MyUserClass.fromMap(tekUser.data());
+      print("randomlyPickedUser == " + _tekUser.userName);
+      randomlySelectedUserList.add(_tekUser);
+    }
+    print("Random SAyı == " + pickerUserIndex.toString());
+    print("hadi bakalim" + currentUser.user.email);
+    print("seçilen userID == " + tumKullanicilar[pickerUserIndex].userID);
+
+    // QuerySnapshot querySnapshot = await _fireStore
+    //     .collection("users")
+    //     .where("field")
+    //     .orderBy("useID")
+    //     .limit(1)
+    //     .get();
+
     // map ile
     // tumKullanicilar = querySnapshot.docs
     //     .map((tekSatir) => MyUserClass.fromMap(tekSatir.data()))
     //     .toList();
-    return tumKullanicilar;
+    return randomlySelectedUserList;
   }
 
   @override
