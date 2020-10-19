@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/BottomNavigation/customBottomNavigation.dart';
@@ -15,6 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   TabItem _currentTab = TabItem.Kullanicilar;
   Map<TabItem, GlobalKey<NavigatorState>> navigatorKeys = {
     TabItem.Kullanicilar: GlobalKey<NavigatorState>(),
@@ -27,6 +29,37 @@ class _HomePageState extends State<HomePage> {
       TabItem.Konusmalarim: KonusmalarimTab(),
       TabItem.Profil: ProfilTab(),
     };
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage Tetiklendi: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch Tetiklendi: $message");
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume Tetiklendi: $message");
+      },
+    );
+    // _firebaseMessaging.requestNotificationPermissions(
+    //     const IosNotificationSettings(
+    //         sound: true, badge: true, alert: true, provisional: true));
+    // _firebaseMessaging.onIosSettingsRegistered
+    //     .listen((IosNotificationSettings settings) {
+    //   print("Settings registered: $settings");
+    // });
+    // _firebaseMessaging.getToken().then((String token) {
+    //   assert(token != null);
+    //   setState(() {
+    //     _homeScreenText = "Push Messaging token: $token";
+    //   });
+    //   print(_homeScreenText);
+    // });
   }
 
   @override

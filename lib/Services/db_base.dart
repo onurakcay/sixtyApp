@@ -10,7 +10,10 @@ abstract class DbBase {
   Future<bool> updateUserName(String userID, String yeniUserName);
   Future<bool> updateProfilePhoto(String userID, String profilFotoURL);
   Future<List<MyUserClass>> getAllUsers(UserModel currentUser);
-  Future<List<Chat>> getAllChats(String userID);
+
+  // Future<List<Chat>> getAllChats(String userID);
+  Future<List<Chat>> getAllChatsWithPagination(
+      UserModel currentUser, Chat lastFetchedChat, int itemsPerFetch);
   Stream<List<Message>> getMessages(String curretUserID, String chattingUserID);
   Future<bool> saveMessage(Message saveMessage);
   Future<DateTime> showTime(String userID);

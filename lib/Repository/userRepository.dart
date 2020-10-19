@@ -177,13 +177,63 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<List<Chat>> getAllChats(String userID) async {
+  // Future<List<Chat>> getAllChats(String userID) async {
+  //   if (appmode == AppMode.DEBUG) {
+  //     return [];
+  //   } else {
+  //     DateTime _readTime = await _fireStoreDbService.showTime(userID);
+
+  //     var chatList = await _fireStoreDbService.getAllChats(userID);
+  //     for (var currentChat in chatList) {
+  //       var userListesindekiKullanici = findUserOnList(currentChat.talking_to);
+
+  //       if (userListesindekiKullanici != null) {
+  //         print("Veriler Local CACHEDEN OKUNDU");
+  //         currentChat.chattingUsername = userListesindekiKullanici.userName;
+  //         currentChat.chattingProfilePicture =
+  //             userListesindekiKullanici.profileURL;
+  //       } else {
+  //         print("Veriler VERİ TABANINDAN OKUNDU");
+  //         print(
+  //             "Aranılan user daha önceden veritabanından getirilmemiş, o yüzden veritabanından bu veriyi okumalıyız.");
+  //         var _veritabanindenOkunanUser =
+  //             await _fireStoreDbService.readUser(currentChat.talking_to);
+  //         currentChat.chattingUsername = _veritabanindenOkunanUser.userName;
+  //         currentChat.chattingProfilePicture =
+  //             _veritabanindenOkunanUser.profileURL;
+  //       }
+  //       calculateTimeAgo(currentChat, _readTime);
+  //     }
+  //     return chatList;
+  //   }
+  // }
+
+  MyUserClass findUserOnList(String userID) {
+    for (int i = 0; i < tumKullaniciListesi.length; i++) {
+      if (tumKullaniciListesi[i].userID == userID) {
+        return tumKullaniciListesi[i];
+      }
+    }
+    return null;
+  }
+
+  void calculateTimeAgo(Chat currentChat, DateTime _readTime) {
+    timeago.setLocaleMessages("tr", timeago.TrMessages());
+    var _duration = _readTime.difference(currentChat.created_at.toDate());
+    currentChat.aradakiFark =
+        timeago.format(_readTime.subtract(_duration), locale: "tr");
+  }
+
+  Future<List<Chat>> getAllChatsWithPagination(
+      UserModel userID, Chat lastFetchedChat, int itemsPerFetch) async {
     if (appmode == AppMode.DEBUG) {
       return [];
     } else {
-      DateTime _readTime = await _fireStoreDbService.showTime(userID);
+      DateTime _readTime =
+          await _fireStoreDbService.showTime(userID.user.userID);
 
-      var chatList = await _fireStoreDbService.getAllChats(userID);
+      var chatList = await _fireStoreDbService.getAllChatsWithPagination(
+          userID, lastFetchedChat, itemsPerFetch);
       for (var currentChat in chatList) {
         var userListesindekiKullanici = findUserOnList(currentChat.talking_to);
 
@@ -206,21 +256,5 @@ class UserRepository implements AuthBase {
       }
       return chatList;
     }
-  }
-
-  MyUserClass findUserOnList(String userID) {
-    for (int i = 0; i < tumKullaniciListesi.length; i++) {
-      if (tumKullaniciListesi[i].userID == userID) {
-        return tumKullaniciListesi[i];
-      }
-    }
-    return null;
-  }
-
-  void calculateTimeAgo(Chat currentChat, DateTime _readTime) {
-    timeago.setLocaleMessages("tr", timeago.TrMessages());
-    var _duration = _readTime.difference(currentChat.created_at.toDate());
-    currentChat.aradakiFark =
-        timeago.format(_readTime.subtract(_duration), locale: "tr");
   }
 }

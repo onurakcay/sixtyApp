@@ -146,23 +146,23 @@ class FireStoreDbService implements DbBase {
     return randomlySelectedUserList;
   }
 
-  @override
-  Future<List<Chat>> getAllChats(String userID) async {
-    QuerySnapshot querySnapshot = await _fireStore
-        .collection("chats")
-        .where("chat_owner", isEqualTo: userID)
-        .orderBy("created_at", descending: true)
-        .get();
-    List<Chat> allChats = [];
+  // @override
+  // Future<List<Chat>> getAllChats(String userID) async {
+  //   QuerySnapshot querySnapshot = await _fireStore
+  //       .collection("chats")
+  //       .where("chat_owner", isEqualTo: userID)
+  //       .orderBy("created_at", descending: true)
+  //       .get();
+  //   List<Chat> allChats = [];
 
-    for (DocumentSnapshot singleChat in querySnapshot.docs) {
-      Chat _singleChat = Chat.fromMap(singleChat.data());
+  //   for (DocumentSnapshot singleChat in querySnapshot.docs) {
+  //     Chat _singleChat = Chat.fromMap(singleChat.data());
 
-      allChats.add(_singleChat);
-    }
+  //     allChats.add(_singleChat);
+  //   }
 
-    return allChats;
-  }
+  //   return allChats;
+  // }
 
   @override
   Stream<List<Message>> getMessages(
@@ -226,5 +226,35 @@ class FireStoreDbService implements DbBase {
     var okunanMap = await _fireStore.collection("server").doc(userID).get();
     var okunanTarih = okunanMap.data()['saat'];
     return okunanTarih.toDate();
+  }
+
+  @override
+  Future<List<Chat>> getAllChatsWithPagination(
+      UserModel currentUser, Chat lastFetchedChat, int itemsPerFetch) async {
+    QuerySnapshot _querySnapshot;
+    List<Chat> _allChats = [];
+    if (lastFetchedChat == null) {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("chats")
+          .where("chat_owner", isEqualTo: currentUser.user.userID)
+          .orderBy("created_at")
+          .limit(itemsPerFetch)
+          .get();
+    } else {
+      _querySnapshot = await FirebaseFirestore.instance
+          .collection("chats")
+          .where("chat_owner", isEqualTo: currentUser.user.userID)
+          .orderBy("created_at")
+          .startAfter([lastFetchedChat.created_at])
+          .limit(itemsPerFetch)
+          .get();
+      await Future.delayed(Duration(milliseconds: 100));
+    }
+
+    for (DocumentSnapshot snap in _querySnapshot.docs) {
+      Chat _tekChat = Chat.fromMap(snap.data());
+      _allChats.add(_tekChat);
+    }
+    return _allChats;
   }
 }
