@@ -1,11 +1,13 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/BottomNavigation/customBottomNavigation.dart';
 import 'package:sixtyseconds/Screens/BottomNavigation/tab_items.dart';
 import 'package:sixtyseconds/Screens/konusmalarim.dart';
 import 'package:sixtyseconds/Screens/kullanicilar.dart';
 import 'package:sixtyseconds/Screens/profil.dart';
+import 'package:sixtyseconds/notificationHandler.dart';
 
 class HomePage extends StatefulWidget {
   final MyUserClass user;
@@ -33,19 +35,8 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    _firebaseMessaging.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage Tetiklendi: $message");
-      },
-      onLaunch: (Map<String, dynamic> message) async {
-        print("onLaunch Tetiklendi: $message");
-      },
-      onResume: (Map<String, dynamic> message) async {
-        print("onResume Tetiklendi: $message");
-      },
-    );
+    NotificationHandler().initializeFCMNotification(context);
     // _firebaseMessaging.requestNotificationPermissions(
     //     const IosNotificationSettings(
     //         sound: true, badge: true, alert: true, provisional: true));

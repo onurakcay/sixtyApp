@@ -53,25 +53,7 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
                       style: TextStyle(color: Colors.white, fontSize: 18),
                     ),
                   )
-                : Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Text(
-                        "Ruh ikizin aranıyor",
-                        style: TextStyle(color: Colors.white, fontSize: 18.0),
-                      ),
-                      TypewriterAnimatedTextKit(
-                          speed: Duration(milliseconds: 100),
-                          pause: Duration(milliseconds: 100),
-                          repeatForever: true,
-                          onTap: () {
-                            print("Tap Event");
-                          },
-                          text: [".", "..", "..."],
-                          textStyle: TextStyle(fontSize: 24.0),
-                          textAlign: TextAlign.start),
-                    ],
-                  ),
+                : Container(),
             _isSearching == true
                 ? AvatarGlow(
                     glowColor: Colors.indigo,
@@ -86,18 +68,7 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
                       child: CircleAvatar(
                         backgroundColor: Colors.grey[800],
                         child: RawMaterialButton(
-                          onPressed: () async {
-                            var randomlyPickedUser =
-                                await _userModel.getAllUser(_userModel);
-                            var pickedUser = randomlyPickedUser[0];
-
-                            Navigator.of(context, rootNavigator: true)
-                                .push(CupertinoPageRoute(
-                                    builder: (context) => Sohbet(
-                                          currentUser: _userModel.user,
-                                          chattingUser: pickedUser,
-                                        )));
-                          },
+                          onPressed: () async {},
                           elevation: 0.0,
                           fillColor: Colors.white,
                           child: Container(
@@ -120,18 +91,9 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
                 : RawMaterialButton(
                     onPressed: () async {
                       startSearch(true);
-                      Future.delayed(Duration(seconds: 13));
-                      // var randomlyPickedUser =
-                      //     await _userModel.getAllUser(_userModel);
-                      // startSearch(false);
-                      // var pickedUser = randomlyPickedUser[0];
-
-                      // Navigator.of(context, rootNavigator: true)
-                      //     .push(CupertinoPageRoute(
-                      //         builder: (context) => Sohbet(
-                      //               currentUser: _userModel.user,
-                      //               chattingUser: pickedUser,
-                      //             )));
+                      Future.delayed(const Duration(seconds: 5), () {
+                        matchUser(_userModel);
+                      });
                     },
                     elevation: 2.0,
                     fillColor: Colors.white,
@@ -152,19 +114,21 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
                 ? Container(
                     margin: EdgeInsets.only(top: 24),
                     child: SizedBox(
-                      child: TypewriterAnimatedTextKit(
-                          speed: Duration(milliseconds: 200),
+                      child: FadeAnimatedTextKit(
+                          // speed: Duration(milliseconds: 120),
                           totalRepeatCount: 4,
                           repeatForever:
                               true, //this will ignore [totalRepeatCount]
                           pause: Duration(milliseconds: 200),
                           text: [
                             "Hazır Ol!",
-                            "60 saniye süren olduğunu unutma...",
-                            "do it RIGHT NOW!!!"
+                            "60 saniye süren var!",
+                            "Başlıyoruz!!!"
                           ],
                           textStyle: TextStyle(
-                              fontSize: 32.0, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 24.0,
+                              fontWeight: FontWeight.bold),
                           displayFullTextOnTap: true,
                           stopPauseOnTap: true),
                     ),
@@ -180,5 +144,17 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
     setState(() {});
 
     return null;
+  }
+
+  void matchUser(UserModel _userModel) async {
+    var randomlyPickedUser = await _userModel.getAllUser(_userModel);
+    startSearch(false);
+    var pickedUser = randomlyPickedUser[0];
+
+    Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
+        builder: (context) => Sohbet(
+              currentUser: _userModel.user,
+              chattingUser: pickedUser,
+            )));
   }
 }

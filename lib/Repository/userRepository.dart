@@ -9,6 +9,7 @@ import 'package:sixtyseconds/Services/fake_authentication_service.dart';
 import 'package:sixtyseconds/Services/firebase_auth_service.dart';
 import 'package:sixtyseconds/Services/firebase_storage_service.dart';
 import 'package:sixtyseconds/Services/firestore_db_service.dart';
+import 'package:sixtyseconds/Services/send_notification_service.dart';
 import 'package:sixtyseconds/locator.dart';
 import 'package:sixtyseconds/viewModel/userModel.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -22,18 +23,24 @@ class UserRepository implements AuthBase {
   FireStoreDbService _fireStoreDbService = locator<FireStoreDbService>();
   FirebaseStorageService _firebaseStorageService =
       locator<FirebaseStorageService>();
+  SendNotificationService _sendNotificationService =
+      locator<SendNotificationService>();
 
   AppMode appmode = AppMode.RELEASE;
   List<MyUserClass> tumKullaniciListesi = [];
+  Map<String, String> userToken = Map<String, String>();
+
   @override
   Future<MyUserClass> currentUser() async {
     if (appmode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.currentUser();
     } else {
-      // return await _firebaseAuthService.currentUser();
-
       MyUserClass _user = await _firebaseAuthService.currentUser();
-      return await _fireStoreDbService.readUser(_user.userID);
+      if (_user != null) {
+        return await _fireStoreDbService.readUser(_user.userID);
+      } else {
+        return null;
+      }
     }
   }
 
@@ -57,15 +64,23 @@ class UserRepository implements AuthBase {
 
   @override
   Future<MyUserClass> signInWithGoogle() async {
-    String age, gender, interest, username;
+    String age = "11",
+        gender = "male",
+        interest = "female",
+        username = "gigigl";
     if (appmode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.signInWithGoogle();
     } else {
       MyUserClass _user = await _firebaseAuthService.signInWithGoogle();
-      bool _sonuc = await _fireStoreDbService.saveUser(
-          _user, age, gender, interest, username);
-      if (_sonuc == true) {
-        return await _fireStoreDbService.readUser(_user.userID);
+      if (_user != null) {
+        bool _sonuc = await _fireStoreDbService.saveUser(
+            _user, age, gender, interest, username);
+        if (_sonuc == true) {
+          return await _fireStoreDbService.readUser(_user.userID);
+        } else {
+          await _firebaseAuthService.signOut();
+          return null;
+        }
       } else {
         return null;
       }
@@ -79,10 +94,14 @@ class UserRepository implements AuthBase {
       return await _fakeAuthenticationService.signInWithFaceBook();
     } else {
       MyUserClass _user = await _firebaseAuthService.signInWithFaceBook();
-      bool _sonuc = await _fireStoreDbService.saveUser(
-          _user, age, gender, interest, username);
-      if (_sonuc == true) {
-        return await _fireStoreDbService.readUser(_user.userID);
+      if (_user != null) {
+        bool _sonuc = await _fireStoreDbService.saveUser(
+            _user, age, gender, interest, username);
+        if (_sonuc == true) {
+          return await _fireStoreDbService.readUser(_user.userID);
+        } else {
+          return null;
+        }
       } else {
         return null;
       }
@@ -169,11 +188,31 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<bool> saveMessage(Message saveMessage) async {
+  Future<bool> saveMessage(Message saveMessage, MyUserClass currentUser) async {
     if (appmode == AppMode.DEBUG) {
       return true;
     } else {
-      return _fireStoreDbService.saveMessage(saveMessage);
+      var dbYazmaIslemi = await _fireStoreDbService.saveMessage(saveMessage);
+      if (dbYazmaIslemi) {
+        var token = "";
+        if (userToken.containsKey(saveMessage.to)) {
+          token = userToken[saveMessage.to];
+          print("lokalden geldi");
+        } else {
+          token = await _fireStoreDbService.getToken(saveMessage.to);
+          if (token != null) {
+            userToken[saveMessage.to] = token;
+          }
+          print("veri  tabanından geldi");
+        }
+        if (token != null) {
+          await _sendNotificationService.sendNotification(
+              saveMessage, currentUser, token);
+        }
+        return true;
+      } else {
+        return false;
+      }
     }
   }
 

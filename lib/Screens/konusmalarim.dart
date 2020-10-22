@@ -46,7 +46,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
   @override
   Widget build(BuildContext context) {
     UserModel _userModel = Provider.of<UserModel>(context, listen: false);
-
+    print("ALL CHATSSS:" + _allChats.toString());
     return Scaffold(
       appBar: AppBar(
         title: Text("Konusmalarim"),
@@ -128,36 +128,36 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
                     );
                   }),
             )
-          : _allChats.length > 0
-              ? _createChatList()
-              : RefreshIndicator(
-                  onRefresh: _refreshMyChats,
-                  child: SingleChildScrollView(
-                    physics: AlwaysScrollableScrollPhysics(),
-                    child: Container(
-                      child: Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Image.network(
-                                "https://media.tenor.com/images/c378b26f65d993c886d9c6fc29b6dcdf/tenor.gif"),
-                            Container(
-                              margin: EdgeInsets.only(top: 24),
-                              child: Text('Henüz kimseyle konuşmuyorsun.'),
-                            ),
-                            FlatButton.icon(
-                              icon: Icon(Icons.refresh_rounded),
-                              label: Text("Yeniden Dene"),
-                              onPressed: _refreshMyChats,
-                              textColor: Colors.black54,
-                            )
-                          ],
+          : RefreshIndicator(
+              onRefresh: _refreshMyChats,
+              child: SingleChildScrollView(
+                physics: AlwaysScrollableScrollPhysics(),
+                child: !_allChats.isEmpty
+                    ? _createChatList()
+                    : Container(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Image.network(
+                                  "https://media.tenor.com/images/c378b26f65d993c886d9c6fc29b6dcdf/tenor.gif"),
+                              Container(
+                                margin: EdgeInsets.only(top: 24),
+                                child: Text('Henüz kimseyle konuşmuyorsun.'),
+                              ),
+                              FlatButton.icon(
+                                icon: Icon(Icons.refresh_rounded),
+                                label: Text("Yeniden Dene"),
+                                onPressed: _refreshMyChats,
+                                textColor: Colors.black54,
+                              )
+                            ],
+                          ),
                         ),
+                        height: MediaQuery.of(context).size.height - 150,
                       ),
-                      height: MediaQuery.of(context).size.height - 150,
-                    ),
-                  ),
-                ),
+              ),
+            ),
     );
   }
 
@@ -178,7 +178,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
 
     List<Chat> _chats = await _userModel.getAllChatsWithPagination(
         _userModel, _lastFetchedChat, _itemsPerFetch);
-
+    print("CHATS :" + _chats.toString());
     if (_allChats == null) {
       _allChats = [];
       _allChats.addAll(_chats);
@@ -190,7 +190,9 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
       _hasMore = false;
     }
 
-    _lastFetchedChat = _allChats.last;
+    if (!_allChats.isEmpty) {
+      _lastFetchedChat = _allChats.last;
+    }
 
     setState(() {
       _isLoading = false;
@@ -199,8 +201,8 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
 
   _createChatList() {
     UserModel _userModel = Provider.of<UserModel>(context, listen: false);
-    return RefreshIndicator(
-      onRefresh: _refreshMyChats,
+    return Container(
+      height: MediaQuery.of(context).size.height - 85,
       child: ListView.builder(
         controller: _scrollController,
         itemBuilder: (context, index) {
@@ -266,7 +268,11 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
   }
 
   Future<Null> _refreshMyChats() async {
-    setState(() {});
+    setState(() {
+      _hasMore = true;
+    });
+    getChat();
+
     return null;
   }
 }

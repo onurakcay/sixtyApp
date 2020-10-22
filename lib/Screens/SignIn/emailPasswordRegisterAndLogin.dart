@@ -107,8 +107,8 @@ class _EmailveSifreLoginState extends State<EmailveSifreLogin> {
     final _userModel = Provider.of<UserModel>(context);
 
     if (_userModel.user != null) {
-      Future.delayed(Duration(milliseconds: 10), () {
-        Navigator.of(context).pop();
+      Future.delayed(Duration(milliseconds: 1), () {
+        Navigator.of(context).popUntil(ModalRoute.withName("/"));
       });
     }
     return Scaffold(

@@ -38,7 +38,11 @@ class UserModel with ChangeNotifier implements AuthBase {
     try {
       state = ViewState.Busy;
       _user = await _userRepository.currentUser();
-      return _user;
+      if (_user != null) {
+        return _user;
+      } else {
+        return null;
+      }
     } catch (e) {
       debugPrint("viewmodel current user hatası: $e");
       return null;
@@ -86,7 +90,11 @@ class UserModel with ChangeNotifier implements AuthBase {
     try {
       state = ViewState.Busy;
       _user = await _userRepository.signInWithGoogle();
-      return _user;
+      if (_user != null) {
+        return _user;
+      } else {
+        return null;
+      }
     } catch (e) {
       debugPrint("viewmodel signInWithGoogle user hatası: $e");
       return null;
@@ -100,10 +108,11 @@ class UserModel with ChangeNotifier implements AuthBase {
     try {
       state = ViewState.Busy;
       _user = await _userRepository.signInWithFaceBook();
-      return _user;
-    } catch (e) {
-      debugPrint("viewmodel signInWithFaceBook user hatası: $e");
-      return null;
+      if (_user != null) {
+        return _user;
+      } else {
+        return null;
+      }
     } finally {
       state = ViewState.Idle;
     }
@@ -241,8 +250,8 @@ class UserModel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, chattingUserID);
   }
 
-  Future<bool> saveMessage(Message saveMessage) async {
-    return await _userRepository.saveMessage(saveMessage);
+  Future<bool> saveMessage(Message saveMessage, MyUserClass currentUser) async {
+    return await _userRepository.saveMessage(saveMessage, currentUser);
   }
 
   // Future<List<Chat>> getAllChats(String userID) async {

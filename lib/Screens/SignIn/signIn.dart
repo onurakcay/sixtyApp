@@ -1,14 +1,26 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Color/colors.dart';
+import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
+
 import 'package:sixtyseconds/CommonWidgets/social_log_in_button.dart';
 import 'package:sixtyseconds/Model/user.dart';
+import 'package:sixtyseconds/Screens/Errors/hata_exception.dart';
 import 'package:sixtyseconds/Screens/SignIn/emailPasswordRegisterAndLogin.dart';
 import 'package:sixtyseconds/viewModel/userModel.dart';
 
-class SignInPage extends StatelessWidget {
+FirebaseAuthException myHata;
+
+class SignInPage extends StatefulWidget {
+  @override
+  _SignInPageState createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> {
   void misafirGirisi(context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
     MyUserClass _user = await _userModel.signInAnonymously();
@@ -21,7 +33,23 @@ class SignInPage extends StatelessWidget {
 
   void _facebookIleGiris(BuildContext context) async {
     final _userModel = Provider.of<UserModel>(context, listen: false);
-    MyUserClass _user = await _userModel.signInWithFaceBook();
+    try {
+      MyUserClass _user = await _userModel.signInWithFaceBook();
+
+      if (_user != null) {
+        print("Kayıt Olan User user id : ${_user.userID}");
+      } else {
+        PlatformBasedAlertDialog(
+          title: "Üzgünüz",
+          content: "Lütfen Tüm Alanları Doldurduğunuzdan Emin Olun",
+          okButtonText: "Tamam",
+        ).goster(context);
+      }
+    } on FirebaseAuthException catch (e) {
+      debugPrint("widget kullanıcıoluşturma hata yakalandı : " +
+          Hatalar.goster(e.code.toString()));
+      myHata = e;
+    }
   }
 
   void _emailVeSifreGiris(BuildContext context) {
@@ -35,6 +63,21 @@ class SignInPage extends StatelessWidget {
         builder: (context) => EmailveSifreLogin(),
       ),
     );
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
+      if (myHata != null) {
+        PlatformBasedAlertDialog(
+          title: "Hata",
+          content: Hatalar.goster(myHata.code.toString()),
+          okButtonText: "Tamam",
+        ).goster(context);
+      }
+    });
   }
 
   @override

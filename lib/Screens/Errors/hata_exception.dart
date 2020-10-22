@@ -10,6 +10,9 @@ class Hatalar {
       case "user-not-found":
         return "Email veya Şifre Hatalı. Lütfen Tekrar Dene.";
         break;
+      case "account-exists-with-different-credential":
+        return "Facebook hesabınızdaki mail adresi zaten kullanımda.";
+        break;
       default:
         return "Beklenmedik bir hata oluştu.";
     }

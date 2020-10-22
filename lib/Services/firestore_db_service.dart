@@ -14,22 +14,17 @@ class FireStoreDbService implements DbBase {
   @override
   Future<bool> saveUser(MyUserClass user, String age, String gender,
       String interest, String username) async {
-    await _fireStore
-        .collection("users")
-        .doc(user.userID)
-        .set(user.toMap(gender, interest, age, username));
-
     DocumentSnapshot _okunanUser =
         await FirebaseFirestore.instance.doc("users/${user.userID}").get();
-
-    Map _okunanUserBilgileriMap = _okunanUser.data();
-
-    MyUserClass _okunanUserBilgilerNesne =
-        MyUserClass.fromMap(_okunanUserBilgileriMap);
-
-    print("okunan user nesnesi :" + _okunanUserBilgilerNesne.toString());
-
-    return true;
+    if (_okunanUser.data() == null) {
+      await _fireStore
+          .collection("users")
+          .doc(user.userID)
+          .set(user.toMap(gender, interest, age, username));
+      return true;
+    } else {
+      return true;
+    }
   }
 
   @override
@@ -250,11 +245,21 @@ class FireStoreDbService implements DbBase {
           .get();
       await Future.delayed(Duration(milliseconds: 100));
     }
-
+    print("QUERY SNAPHOT : " + _querySnapshot.toString());
     for (DocumentSnapshot snap in _querySnapshot.docs) {
       Chat _tekChat = Chat.fromMap(snap.data());
+      print("QUERY SNAPHOT : " + _tekChat.toString());
       _allChats.add(_tekChat);
     }
     return _allChats;
+  }
+
+  Future<String> getToken(String to) async {
+    DocumentSnapshot _token = await _fireStore.doc("tokens/" + to).get();
+    if (_token != null) {
+      return _token.data()["token"];
+    } else {
+      return null;
+    }
   }
 }
