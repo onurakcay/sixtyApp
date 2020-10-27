@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Color/colors.dart';
+import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/chat.dart';
 import 'package:sixtyseconds/viewModel/userModel.dart';
@@ -149,12 +150,21 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
   void matchUser(UserModel _userModel) async {
     var randomlyPickedUser = await _userModel.getAllUser(_userModel);
     startSearch(false);
-    var pickedUser = randomlyPickedUser[0];
+    if (randomlyPickedUser.isEmpty) {
+      PlatformBasedAlertDialog(
+        title: "Üzgünüz",
+        content:
+            "Eşlebileceğin kimse bulunamadı. Lütfen daha sonra tekrar dene.",
+        okButtonText: "Kapat",
+      ).goster(context);
+    } else {
+      var pickedUser = randomlyPickedUser[0];
 
-    Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
-        builder: (context) => Sohbet(
-              currentUser: _userModel.user,
-              chattingUser: pickedUser,
-            )));
+      Navigator.of(context, rootNavigator: true).push(CupertinoPageRoute(
+          builder: (context) => Sohbet(
+                currentUser: _userModel.user,
+                chattingUser: pickedUser,
+              )));
+    }
   }
 }

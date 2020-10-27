@@ -92,53 +92,65 @@ class FireStoreDbService implements DbBase {
 
     var rnd = Random();
 
-    var pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
+    var pickerUserIndex;
 
-    QuerySnapshot randomlyPickedUser = await _fireStore
-        .collection("users")
-        .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
-        .where("gender", isEqualTo: currentUser.user.interest.toString())
-        .get();
-    print("CURRENT USER ilgi" + currentUser.user.interest);
     MyUserClass _tekTek;
+    bool _isChatBefore = false;
+    QuerySnapshot randomlyPickedUser;
+    int tumKullaniciSayisi = tumKullanicilar.length - 1;
+    int sayac = 0;
+    bool notFound = false;
+
     while (true) {
+      pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
+      randomlyPickedUser = await _fireStore
+          .collection("users")
+          .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
+          .where("gender", isEqualTo: currentUser.user.interest.toString())
+          .get();
       for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
         _tekTek = MyUserClass.fromMap(tekUser.data());
       }
+
       if (_tekTek.userID != currentUser.user.userID) {
-        break;
-      } else {
-        pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
-        randomlyPickedUser = await _fireStore
-            .collection("users")
-            .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
-            .where("gender", isEqualTo: currentUser.user.interest.toString())
+        QuerySnapshot checkForActiveChat = await _fireStore
+            .collection("chats")
+            .where("chat_owner", isEqualTo: currentUser.user.userID)
+            .where("talking_to", isEqualTo: _tekTek.userID)
             .get();
+        for (DocumentSnapshot isChatBefore in checkForActiveChat.docs) {
+          print("is caht before :" + isChatBefore.toString());
+          if (isChatBefore != null) {
+            _isChatBefore = true;
+          } else {
+            _isChatBefore = false;
+          }
+        }
+        if (_isChatBefore == false) {
+          break;
+        }
+      }
+      sayac++;
+      print("sayac = " +
+          sayac.toString() +
+          " toplam = " +
+          tumKullaniciSayisi.toString());
+      if (sayac == tumKullaniciSayisi) {
+        notFound = true;
+        break;
       }
     }
-
-    List<MyUserClass> randomlySelectedUserList = [];
-    for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
-      MyUserClass _tekUser = MyUserClass.fromMap(tekUser.data());
-      print("randomlyPickedUser == " + _tekUser.userName);
-      randomlySelectedUserList.add(_tekUser);
+    if (notFound != true) {
+      List<MyUserClass> randomlySelectedUserList = [];
+      for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
+        MyUserClass _tekUser = MyUserClass.fromMap(tekUser.data());
+        print("randomlyPickedUser == " + _tekUser.userName);
+        randomlySelectedUserList.add(_tekUser);
+      }
+      return randomlySelectedUserList;
+    } else {
+      return [];
     }
-    print("Random SAyı == " + pickerUserIndex.toString());
-    print("hadi bakalim" + currentUser.user.email);
-    print("seçilen userID == " + tumKullanicilar[pickerUserIndex].userID);
-
-    // QuerySnapshot querySnapshot = await _fireStore
-    //     .collection("users")
-    //     .where("field")
-    //     .orderBy("useID")
-    //     .limit(1)
-    //     .get();
-
-    // map ile
-    // tumKullanicilar = querySnapshot.docs
-    //     .map((tekSatir) => MyUserClass.fromMap(tekSatir.data()))
-    //     .toList();
-    return randomlySelectedUserList;
   }
 
   // @override
