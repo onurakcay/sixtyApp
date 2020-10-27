@@ -131,32 +131,37 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
           : RefreshIndicator(
               onRefresh: _refreshMyChats,
               child: SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: !_allChats.isEmpty
-                    ? _createChatList()
-                    : Container(
-                        child: Center(
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.network(
-                                  "https://media.tenor.com/images/c378b26f65d993c886d9c6fc29b6dcdf/tenor.gif"),
-                              Container(
-                                margin: EdgeInsets.only(top: 24),
-                                child: Text('Henüz kimseyle konuşmuyorsun.'),
+                  physics: AlwaysScrollableScrollPhysics(),
+                  child: !_allChats.isEmpty
+                      ? _createChatList()
+                      : !_isLoading
+                          ? Container(
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.network(
+                                        "https://media.tenor.com/images/c378b26f65d993c886d9c6fc29b6dcdf/tenor.gif"),
+                                    Container(
+                                      margin: EdgeInsets.only(top: 24),
+                                      child:
+                                          Text('Henüz kimseyle konuşmuyorsun.'),
+                                    ),
+                                    FlatButton.icon(
+                                      icon: Icon(Icons.refresh_rounded),
+                                      label: Text("Yeniden Dene"),
+                                      onPressed: _refreshMyChats,
+                                      textColor: Colors.black54,
+                                    )
+                                  ],
+                                ),
                               ),
-                              FlatButton.icon(
-                                icon: Icon(Icons.refresh_rounded),
-                                label: Text("Yeniden Dene"),
-                                onPressed: _refreshMyChats,
-                                textColor: Colors.black54,
-                              )
-                            ],
-                          ),
-                        ),
-                        height: MediaQuery.of(context).size.height - 150,
-                      ),
-              ),
+                              height: MediaQuery.of(context).size.height - 150,
+                            )
+                          : Container(
+                              margin: EdgeInsets.only(top: 100),
+                              child:
+                                  Center(child: CircularProgressIndicator()))),
             ),
     );
   }
@@ -268,11 +273,9 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
   }
 
   Future<Null> _refreshMyChats() async {
-    setState(() {
-      _hasMore = true;
-    });
+    _hasMore = true;
+    _allChats = [];
+    _lastFetchedChat = null;
     getChat();
-
-    return null;
   }
 }
