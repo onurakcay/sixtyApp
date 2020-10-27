@@ -217,6 +217,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
           var currentChat = _allChats[index];
           return GestureDetector(
             onTap: () {
+              bool isChatted = true;
               Navigator.of(context, rootNavigator: true)
                   .push(CupertinoPageRoute(
                       builder: (context) => Sohbet(
@@ -225,6 +226,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
                                 userID: currentChat.talking_to,
                                 profileURL: currentChat.chattingProfilePicture,
                                 userName: currentChat.chattingUsername),
+                                isChatted: isChatted,
                           )));
             },
             child: Card(

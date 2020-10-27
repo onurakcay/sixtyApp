@@ -14,8 +14,9 @@ import 'package:sixtyseconds/viewModel/userModel.dart';
 class Sohbet extends StatefulWidget {
   final MyUserClass currentUser;
   final MyUserClass chattingUser;
+  final bool isChatted;
 
-  Sohbet({this.currentUser, this.chattingUser});
+  Sohbet({this.currentUser, this.chattingUser, this.isChatted});
 
   @override
   _SohbetState createState() => _SohbetState();
@@ -34,16 +35,25 @@ class _SohbetState extends State<Sohbet> {
   Widget build(BuildContext context) {
     MyUserClass _currentUser = widget.currentUser;
     MyUserClass _chattingUser = widget.chattingUser;
+    bool _isChatted = widget.isChatted;
+    if (_isChatted == null) {
+      _isChatted = false;
+    }
+    print(_isChatted);
     final _userModel = Provider.of<UserModel>(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(!_isLocked
+        title: Text(_isChatted
             ? _chattingUser.userName
             : _isYourTurn
                 ? "Senin Sıran"
                 : "Onun Sırası"),
-        actions: [_isLocked ? timerCountdown() : profilePicture(_chattingUser)],
+        actions: [
+          !_isChatted
+              ? timerCountdown(_isChatted)
+              : profilePicture(_chattingUser)
+        ],
       ),
       body: Center(
         child: Column(children: [
@@ -108,7 +118,8 @@ class _SohbetState extends State<Sohbet> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-                      if (_isYourTurn) {
+
+                      if (_isYourTurn  && _isChatted==false) {
                         _timerController.restart();
                       }
                       setState(() {
@@ -250,69 +261,62 @@ class _SohbetState extends State<Sohbet> {
     return _formattedDate;
   }
 
-  timerCountdown() {
-    return CircularCountDownTimer(
-      // Countdown duration in Seconds
-      duration: 60,
+  timerCountdown(bool isChatted) {
+    if (!isChatted) {
+      return CircularCountDownTimer(
+        // Countdown duration in Seconds
+        duration: 60,
 
-      // Controller to control (i.e Pause, Resume, Restart) the Countdown
-      controller: _timerController,
+        // Controller to control (i.e Pause, Resume, Restart) the Countdown
+        controller: _timerController,
 
-      // Width of the Countdown Widget
-      width: 80,
+        // Width of the Countdown Widget
+        width: 80,
 
-      // Height of the Countdown Widget
-      height: MediaQuery.of(context).size.height / 2,
+        // Height of the Countdown Widget
+        height: MediaQuery.of(context).size.height / 2,
 
-      // Default Color for Countdown Timer
-      color: Colors.white,
+        // Default Color for Countdown Timer
+        color: Colors.white,
 
-      // Filling Color for Countdown Timer
-      fillColor: Colors.purpleAccent,
+        // Filling Color for Countdown Timer
+        fillColor: Colors.purpleAccent,
 
-      // Background Color for Countdown Widget
-      backgroundColor: null,
+        // Background Color for Countdown Widget
+        backgroundColor: null,
 
-      // Border Thickness of the Countdown Circle
-      strokeWidth: 5.0,
+        // Border Thickness of the Countdown Circle
+        strokeWidth: 5.0,
 
-      // Text Style for Countdown Text
-      textStyle: TextStyle(
-          fontSize: 12.0, color: Colors.white, fontWeight: FontWeight.bold),
+        // Text Style for Countdown Text
+        textStyle: TextStyle(
+            fontSize: 12.0, color: Colors.white, fontWeight: FontWeight.bold),
 
-      // true for reverse countdown (max to 0), false for forward countdown (0 to max)
-      isReverse: true,
+        // true for reverse countdown (max to 0), false for forward countdown (0 to max)
+        isReverse: true,
 
-      // true for reverse animation, false for forward animation
-      isReverseAnimation: true,
+        // true for reverse animation, false for forward animation
+        isReverseAnimation: true,
 
-      // Optional [bool] to hide the [Text] in this widget.
-      isTimerTextShown: true,
+        // Optional [bool] to hide the [Text] in this widget.
+        isTimerTextShown: true,
 
-      // Function which will execute when the Countdown Ends
-      onComplete: () {
-        // Here, do whatever you want
-        print('Countdown Ended');
-      },
-    );
+        // Function which will execute when the Countdown Ends
+        onComplete: () {
+          // Here, do whatever you want
+          print('Countdown Ended');
+        },
+      );
+    }
   }
 
-  profilePicture(var _chattingUser) {
-    return FullScreenWidget(
-      child: Hero(
-        tag: "customTag",
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(16),
-          child: Container(
-            margin: EdgeInsets.only(
-                right: MediaQuery.of(context).size.width * 0.05),
-            child: CircleAvatar(
-              radius: 25,
-              backgroundImage: NetworkImage(_chattingUser.profileURL),
-            ),
-          ),
-        ),
+  profilePicture(MyUserClass chattingUser) {
+    var container = Container(
+      margin: EdgeInsets.only(right: 30),
+      child: CircleAvatar(
+        backgroundImage: NetworkImage(chattingUser.profileURL),
       ),
     );
+    return container;
   }
 }
