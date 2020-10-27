@@ -49,7 +49,7 @@ class MyUserClass {
         interest = map['interest'],
         gender = map['gender'],
         createdAt = (map['createdAt'] as Timestamp).toDate(),
-        updatedAt = (map['updatedAt'] as Timestamp).toDate();
+        updatedAt = (map['updatedAt'] as Timestamp).toDate() ?? null;
 
   MyUserClass.idveResim(
       {@required this.userID,
