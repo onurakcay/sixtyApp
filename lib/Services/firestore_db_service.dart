@@ -98,46 +98,51 @@ class FireStoreDbService implements DbBase {
     bool _isChatBefore = false;
     QuerySnapshot randomlyPickedUser;
     int tumKullaniciSayisi = tumKullanicilar.length - 1;
-    int sayac = 0;
     bool notFound = false;
+
+    List randomlySelectedUserIndex = [];
 
     while (true) {
       pickerUserIndex = rnd.nextInt(tumKullanicilar.length);
-      randomlyPickedUser = await _fireStore
-          .collection("users")
-          .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
-          .where("gender", isEqualTo: currentUser.user.interest.toString())
-          .get();
-      for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
-        _tekTek = MyUserClass.fromMap(tekUser.data());
-      }
+      if (!randomlySelectedUserIndex.contains(pickerUserIndex)) {
+        randomlySelectedUserIndex.add(pickerUserIndex);
 
-      if (_tekTek.userID != currentUser.user.userID) {
-        QuerySnapshot checkForActiveChat = await _fireStore
-            .collection("chats")
-            .where("chat_owner", isEqualTo: currentUser.user.userID)
-            .where("talking_to", isEqualTo: _tekTek.userID)
+        randomlyPickedUser = await _fireStore
+            .collection("users")
+            .where("userID", isEqualTo: tumKullanicilar[pickerUserIndex].userID)
+            .where("gender", isEqualTo: currentUser.user.interest.toString())
             .get();
-        for (DocumentSnapshot isChatBefore in checkForActiveChat.docs) {
-          print("is caht before :" + isChatBefore.toString());
-          if (isChatBefore != null) {
-            _isChatBefore = true;
-          } else {
-            _isChatBefore = false;
+        for (DocumentSnapshot tekUser in randomlyPickedUser.docs) {
+          _tekTek = MyUserClass.fromMap(tekUser.data());
+        }
+
+        if (_tekTek.userID != currentUser.user.userID) {
+          QuerySnapshot checkForActiveChat = await _fireStore
+              .collection("chats")
+              .where("chat_owner", isEqualTo: currentUser.user.userID)
+              .where("talking_to", isEqualTo: _tekTek.userID)
+              .get();
+          for (DocumentSnapshot isChatBefore in checkForActiveChat.docs) {
+            print("is caht before :" + isChatBefore.toString());
+            if (isChatBefore != null) {
+              _isChatBefore = true;
+            } else {
+              _isChatBefore = false;
+            }
+          }
+          if (_isChatBefore == false) {
+            break;
           }
         }
-        if (_isChatBefore == false) {
+
+        if (randomlySelectedUserIndex.length == tumKullaniciSayisi) {
+          notFound = true;
           break;
         }
-      }
-      sayac++;
-      print("sayac = " +
-          sayac.toString() +
-          " toplam = " +
-          tumKullaniciSayisi.toString());
-      if (sayac == tumKullaniciSayisi) {
-        notFound = true;
-        break;
+        print("Liste: " +
+            randomlySelectedUserIndex.toString() +
+            " Tum kullanici: " +
+            tumKullaniciSayisi.toString());
       }
     }
     if (notFound != true) {
