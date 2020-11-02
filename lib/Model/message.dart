@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:sixtyseconds/Model/user.dart';
 
 class Message {
   final String from;

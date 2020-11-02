@@ -23,5 +23,6 @@ class SendNotificationService {
       print("islem basarisiz " + response.statusCode.toString());
       print("jsonumuuz: " + json);
     }
+    return null;
   }
 }

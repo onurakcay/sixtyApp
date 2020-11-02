@@ -1,8 +1,6 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter_offline/flutter_offline.dart';
 import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Color/colors.dart';
 import 'package:sixtyseconds/Model/chat_model.dart';
@@ -45,7 +43,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
 
   @override
   Widget build(BuildContext context) {
-    UserModel _userModel = Provider.of<UserModel>(context, listen: false);
+    // UserModel _userModel = Provider.of<UserModel>(context, listen: false);
     print("ALL CHATSSS:" + _allChats.toString());
     return Scaffold(
       appBar: AppBar(
@@ -226,7 +224,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
                                 userID: currentChat.talking_to,
                                 profileURL: currentChat.chattingProfilePicture,
                                 userName: currentChat.chattingUsername),
-                                isChatted: isChatted,
+                            isChatted: isChatted,
                           )));
             },
             child: Card(

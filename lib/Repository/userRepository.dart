@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:flutter/cupertino.dart';
 import 'package:sixtyseconds/Model/chat_model.dart';
 import 'package:sixtyseconds/Model/message.dart';
 import 'package:sixtyseconds/Model/user.dart';

@@ -6,7 +6,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
-import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
+
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/chat.dart';
 import 'package:sixtyseconds/viewModel/userModel.dart';
@@ -17,7 +17,7 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 Future<void> myBackgroundMessageHandler(Map<String, dynamic> message) {
   if (message.containsKey('data')) {
     // Handle data message
-    final dynamic data = message['data'];
+
     print("Arka planda getirilen data" + message['data'].toString());
     NotificationHandler.showNotification(message);
   }
@@ -61,7 +61,7 @@ class NotificationHandler {
     // String token = await _fcm.getToken();
 
     _fcm.onTokenRefresh.listen((newToken) async {
-      User _currentUser = await FirebaseAuth.instance.currentUser;
+      User _currentUser = FirebaseAuth.instance.currentUser;
 
       await FirebaseFirestore.instance
           .doc("tokens/" + _currentUser.uid)
@@ -103,7 +103,9 @@ class NotificationHandler {
   }
 
   Future onDidReceiveLocalNotification(
-      int id, String title, String body, String payload) {}
+      int id, String title, String body, String payload) {
+    return null;
+  }
 
   Future onselectNotification(String payload) async {
     final _userModel = Provider.of<UserModel>(myContext, listen: false);

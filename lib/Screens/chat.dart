@@ -1,9 +1,6 @@
-import 'dart:async';
-
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:full_screen_image/full_screen_image.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Color/colors.dart';
@@ -26,8 +23,8 @@ class _SohbetState extends State<Sohbet> {
   var _messageController = TextEditingController();
   final _controller = ScrollController();
   CountDownController _timerController = CountDownController();
-  bool _isPause = false;
-  bool _isLocked = true;
+  // bool _isPause = false;
+  // bool _isLocked = true;
   bool _isYourTurn = true;
 
   @override
@@ -41,7 +38,7 @@ class _SohbetState extends State<Sohbet> {
     }
     print(_isChatted);
     final _userModel = Provider.of<UserModel>(context);
-
+    _isChatted = false;
     return Scaffold(
       appBar: AppBar(
         title: Text(_isChatted
@@ -69,10 +66,29 @@ class _SohbetState extends State<Sohbet> {
                 }
 
                 List<Message> allMessages = streamMessageList.data;
+                int messageCounter = allMessages.length;
                 return ListView.builder(
                   reverse: true,
                   controller: _controller,
                   itemBuilder: (context, index) {
+                    // print("Mesaj Uzunluğu: " + allMessages.length.toString());
+                    if (!allMessages.first.fromMe == true &&
+                        messageCounter == allMessages.length - 1) {
+                      messageCounter = allMessages.length - 1;
+                      print("ondan mesaj geldi");
+                      // _isYourTurn = false;
+                    } else if (allMessages.first.fromMe == true &&
+                        messageCounter == allMessages.length - 1) {
+                      messageCounter = allMessages.length - 1;
+                      print("benden mesaj gitti");
+                      // _isYourTurn = true;
+                    }
+                    // () async {
+                    //   setState(() {
+
+                    //   });
+                    // }();
+
                     return _generateChatBaloon(allMessages[index]);
                   },
                   itemCount: allMessages.length,
@@ -98,7 +114,7 @@ class _SohbetState extends State<Sohbet> {
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: "Mesaj Gönder",
+                      hintText: "Mesaj Gönderrrrrr",
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                           borderSide: BorderSide.none),
@@ -118,13 +134,10 @@ class _SohbetState extends State<Sohbet> {
                       color: Colors.white,
                     ),
                     onPressed: () async {
-
-                      if (_isYourTurn  && _isChatted==false) {
+                      if (_isYourTurn && _isChatted == false) {
                         _timerController.restart();
                       }
-                      setState(() {
-                        _isYourTurn = false;
-                      });
+                      notMyTurn();
 
                       var _messageToSent = _messageController.text;
                       if (_messageController.text.trim().length > 0) {
@@ -205,6 +218,7 @@ class _SohbetState extends State<Sohbet> {
         ),
       );
     } else {
+      _timerController.restart();
       return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
@@ -318,5 +332,11 @@ class _SohbetState extends State<Sohbet> {
       ),
     );
     return container;
+  }
+
+  void notMyTurn() {
+    setState(() {
+      _isYourTurn = false;
+    });
   }
 }

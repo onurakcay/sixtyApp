@@ -15,7 +15,7 @@ class PlatformBasedAlertDialog extends PlatformBasedWidget {
     @required this.title,
     @required this.content,
     @required this.okButtonText,
-    this.cancelText: null,
+    this.cancelText,
   });
 
   Future<bool> goster(BuildContext context) async {

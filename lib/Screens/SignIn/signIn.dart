@@ -67,7 +67,6 @@ class _SignInPageState extends State<SignInPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       if (myHata != null) {
@@ -107,11 +106,11 @@ class _SignInPageState extends State<SignInPage> {
     );
   }
 
-  _getBackgroundColor() {
-    return Container(
-      color: Colors.black.withAlpha(120),
-    );
-  }
+  // _getBackgroundColor() {
+  //   return Container(
+  //     color: Colors.black.withAlpha(120),
+  //   );
+  // }
 
   _getContent(context) {
     return Container(
