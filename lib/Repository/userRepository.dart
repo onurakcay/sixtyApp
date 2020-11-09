@@ -187,11 +187,13 @@ class UserRepository implements AuthBase {
     }
   }
 
-  Future<bool> saveMessage(Message saveMessage, MyUserClass currentUser) async {
+  Future<bool> saveMessage(
+      Message saveMessage, MyUserClass currentUser, bool isMatch) async {
     if (appmode == AppMode.DEBUG) {
       return true;
     } else {
-      var dbYazmaIslemi = await _fireStoreDbService.saveMessage(saveMessage);
+      var dbYazmaIslemi =
+          await _fireStoreDbService.saveMessage(saveMessage, isMatch);
       if (dbYazmaIslemi) {
         var token = "";
         if (userToken.containsKey(saveMessage.to)) {
@@ -212,6 +214,17 @@ class UserRepository implements AuthBase {
       } else {
         return false;
       }
+    }
+  }
+
+  Future<bool> matchWith(
+      MyUserClass chattingUser, MyUserClass currentUser, bool isMatch) async {
+    var dbYazmaIslemi =
+        await _fireStoreDbService.matchWith(chattingUser, currentUser, isMatch);
+    if (dbYazmaIslemi) {
+      return true;
+    } else {
+      return false;
     }
   }
 

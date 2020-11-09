@@ -189,7 +189,22 @@ class FireStoreDbService implements DbBase {
         .toList());
   }
 
-  Future<bool> saveMessage(Message saveMessage) async {
+  Future<bool> matchWith(
+      MyUserClass chattingUser, MyUserClass currentUser, bool isMatch) async {
+    var _senderDocID = currentUser.userID + "--" + chattingUser.userID;
+    var _receiverDocID = chattingUser.userID + "--" + currentUser.userID;
+    await _fireStore
+        .collection("chats")
+        .doc(_senderDocID)
+        .update({"isMatch": "true"});
+    await _fireStore
+        .collection("chats")
+        .doc(_receiverDocID)
+        .update({"isMatch": "true"});
+    return true;
+  }
+
+  Future<bool> saveMessage(Message saveMessage, bool isMatch) async {
     var _messageID = _fireStore.collection("chats").doc().id;
     var _senderDocID = saveMessage.from + "--" + saveMessage.to;
     var _receiverDocID = saveMessage.to + "--" + saveMessage.from;
@@ -201,13 +216,25 @@ class FireStoreDbService implements DbBase {
         .doc(_messageID)
         .set(_savingMessageMapStructure);
 
-    await _fireStore.collection("chats").doc(_senderDocID).set({
-      "chat_owner": saveMessage.from,
-      "talking_to": saveMessage.to,
-      "last_sent_message": saveMessage.message,
-      "seen": false,
-      "created_at": Timestamp.now()
-    });
+    if (!isMatch) {
+      await _fireStore.collection("chats").doc(_senderDocID).set({
+        "chat_owner": saveMessage.from,
+        "talking_to": saveMessage.to,
+        "last_sent_message": saveMessage.message,
+        "seen": false,
+        "created_at": Timestamp.now(),
+        "isMatch": false,
+      });
+    } else {
+      await _fireStore.collection("chats").doc(_senderDocID).set({
+        "chat_owner": saveMessage.from,
+        "talking_to": saveMessage.to,
+        "last_sent_message": saveMessage.message,
+        "seen": false,
+        "created_at": Timestamp.now(),
+        "isMatch": true,
+      });
+    }
 
     _savingMessageMapStructure.update("fromMe", (value) => false);
     await _fireStore
@@ -248,6 +275,7 @@ class FireStoreDbService implements DbBase {
       _querySnapshot = await FirebaseFirestore.instance
           .collection("chats")
           .where("chat_owner", isEqualTo: currentUser.user.userID)
+          .where("isMatch", isEqualTo: "true")
           .orderBy("created_at")
           .limit(itemsPerFetch)
           .get();
@@ -255,6 +283,7 @@ class FireStoreDbService implements DbBase {
       _querySnapshot = await FirebaseFirestore.instance
           .collection("chats")
           .where("chat_owner", isEqualTo: currentUser.user.userID)
+          .where("isMatch", isEqualTo: "true")
           .orderBy("created_at")
           .startAfter([lastFetchedChat.created_at])
           .limit(itemsPerFetch)

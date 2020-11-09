@@ -250,8 +250,9 @@ class UserModel with ChangeNotifier implements AuthBase {
     return _userRepository.getMessages(currentUserID, chattingUserID);
   }
 
-  Future<bool> saveMessage(Message saveMessage, MyUserClass currentUser) async {
-    return await _userRepository.saveMessage(saveMessage, currentUser);
+  Future<bool> saveMessage(
+      Message saveMessage, MyUserClass currentUser, bool isMatch) async {
+    return await _userRepository.saveMessage(saveMessage, currentUser, isMatch);
   }
 
   // Future<List<Chat>> getAllChats(String userID) async {
@@ -262,5 +263,10 @@ class UserModel with ChangeNotifier implements AuthBase {
       UserModel userID, Chat lastFetchedChat, int itemsPerFetch) async {
     return await _userRepository.getAllChatsWithPagination(
         userID, lastFetchedChat, itemsPerFetch);
+  }
+
+  Future<bool> matchWith(
+      MyUserClass chattingUser, MyUserClass currentUser, bool isMatch) async {
+    return await _userRepository.matchWith(chattingUser, currentUser, isMatch);
   }
 }

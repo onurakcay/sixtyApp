@@ -15,6 +15,6 @@ abstract class DbBase {
   Future<List<Chat>> getAllChatsWithPagination(
       UserModel currentUser, Chat lastFetchedChat, int itemsPerFetch);
   Stream<List<Message>> getMessages(String curretUserID, String chattingUserID);
-  Future<bool> saveMessage(Message saveMessage);
+  Future<bool> saveMessage(Message saveMessage, bool isMatch);
   Future<DateTime> showTime(String userID);
 }
