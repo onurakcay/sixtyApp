@@ -88,7 +88,10 @@ class UserRepository implements AuthBase {
 
   @override
   Future<MyUserClass> signInWithFaceBook() async {
-    String age, gender, interest, username;
+    String age = "11",
+        gender = "male",
+        interest = "female",
+        username = "gigigl";
     if (appmode == AppMode.DEBUG) {
       return await _fakeAuthenticationService.signInWithFaceBook();
     } else {

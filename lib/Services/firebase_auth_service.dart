@@ -88,6 +88,7 @@ class FirebaseAuthService implements AuthBase {
               await _firebaseAuth.signInWithCredential(
             FacebookAuthProvider.credential(_faceResult.accessToken.token),
           );
+          print("FACBOOK USER :" + _firebaseResult.toString());
           User _user = _firebaseResult.user;
           return _userFromFirebase(_user);
         }
