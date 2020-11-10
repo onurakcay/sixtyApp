@@ -215,7 +215,7 @@ class FireStoreDbService implements DbBase {
         .collection("messages")
         .doc(_messageID)
         .set(_savingMessageMapStructure);
-
+    print("MATCH OLMUŞ MU?: " + isMatch.toString());
     if (!isMatch) {
       await _fireStore.collection("chats").doc(_senderDocID).set({
         "chat_owner": saveMessage.from,

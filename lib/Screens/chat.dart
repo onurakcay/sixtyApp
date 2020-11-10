@@ -42,17 +42,17 @@ class _SohbetState extends State<Sohbet> {
     }
     print(_isChatted);
     final _userModel = Provider.of<UserModel>(context);
-    _isChatted = false;
+
     return Scaffold(
       appBar: AppBar(
         title: _isChatted
             ? Text(_chattingUser.userName)
             : Text(_chattingUser.userName),
         actions: [
-          Visibility(
-            visible: true,
-            child: generalTimerCountdown(_isChatted),
-          ),
+          // Visibility(
+          //   visible: true,
+          //   child: generalTimerCountdown(_isChatted),
+          // ),
           !_isChatted
               ? timerCountdown(_isChatted)
               : profilePicture(_chattingUser),
