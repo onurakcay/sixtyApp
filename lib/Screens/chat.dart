@@ -49,10 +49,10 @@ class _SohbetState extends State<Sohbet> {
             ? Text(_chattingUser.userName)
             : Text(_chattingUser.userName),
         actions: [
-          // Visibility(
-          //   visible: true,
-          //   child: generalTimerCountdown(_isChatted),
-          // ),
+          Visibility(
+            visible: false,
+            child: generalTimerCountdown(_isChatted),
+          ),
           !_isChatted
               ? timerCountdown(_isChatted)
               : profilePicture(_chattingUser),
