@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:provider/provider.dart';
 import 'package:sixtyseconds/Color/colors.dart';
+import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
 import 'package:sixtyseconds/Model/chat_model.dart';
 import 'package:sixtyseconds/Model/user.dart';
 import 'package:sixtyseconds/Screens/chat.dart';
@@ -227,26 +228,42 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
                             isChatted: isChatted,
                           )));
             },
-            child: Card(
-              child: ListTile(
-                title: Text(currentChat.chattingUsername),
-                isThreeLine: true,
-                subtitle: Text(currentChat.last_sent_message.length > 20
-                    ? currentChat.last_sent_message.replaceRange(
-                            20, currentChat.last_sent_message.length, '...') +
-                        " • " +
-                        currentChat.aradakiFark.toString()
-                    : currentChat.last_sent_message +
-                        " • " +
-                        currentChat.aradakiFark.toString()),
-                leading: CircleAvatar(
-                  radius: 28,
-                  backgroundColor: Color(primaryColor),
-                  child: CircleAvatar(
-                    radius: 26,
-                    backgroundColor: Colors.white,
-                    backgroundImage:
-                        NetworkImage(currentChat.chattingProfilePicture),
+            child: GestureDetector(
+              onLongPress: () async {
+                bool result = await PlatformBasedAlertDialog(
+                  title: "Eşleştirme Kaldırlacak",
+                  content: currentChat.chattingUsername +
+                      " ile eşleştirmen kaldırılacak. Emin misin?",
+                  okButtonText: "Eşleşmeyi Kaldır",
+                  cancelText: "İptal",
+                ).goster(context);
+                print("RESULT: " + result.toString());
+                if (result) {
+                  bool removeMatchResult = await _userModel.removeMatch(
+                      currentChat.talking_to, currentChat.chat_owner);
+                }
+              },
+              child: Card(
+                child: ListTile(
+                  title: Text(currentChat.chattingUsername),
+                  isThreeLine: true,
+                  subtitle: Text(currentChat.last_sent_message.length > 20
+                      ? currentChat.last_sent_message.replaceRange(
+                              20, currentChat.last_sent_message.length, '...') +
+                          " • " +
+                          currentChat.aradakiFark.toString()
+                      : currentChat.last_sent_message +
+                          " • " +
+                          currentChat.aradakiFark.toString()),
+                  leading: CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Color(primaryColor),
+                    child: CircleAvatar(
+                      radius: 26,
+                      backgroundColor: Colors.white,
+                      backgroundImage:
+                          NetworkImage(currentChat.chattingProfilePicture),
+                    ),
                   ),
                 ),
               ),

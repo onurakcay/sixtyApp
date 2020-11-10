@@ -307,4 +307,14 @@ class FireStoreDbService implements DbBase {
       return null;
     }
   }
+
+  removeMatch(String talkingTo, String chatOwner) async {
+    var _senderDocID = talkingTo + "--" + chatOwner;
+    var _receiverDocID = chatOwner + "--" + talkingTo;
+    await _fireStore.collection("chats").doc(_senderDocID).delete();
+    await _fireStore.collection("chats").doc(_receiverDocID).delete();
+    await _fireStore.collection("server").doc(talkingTo).delete();
+    await _fireStore.collection("server").doc(chatOwner).delete();
+    return true;
+  }
 }

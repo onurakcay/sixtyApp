@@ -311,4 +311,14 @@ class UserRepository implements AuthBase {
       return chatList;
     }
   }
+
+  Future<bool> removeMatch(String talkingTo, String chatOwner) async {
+    var dbYazmaIslemi =
+        await _fireStoreDbService.removeMatch(talkingTo, chatOwner);
+    if (dbYazmaIslemi) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 }

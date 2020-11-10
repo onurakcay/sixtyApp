@@ -269,4 +269,8 @@ class UserModel with ChangeNotifier implements AuthBase {
       MyUserClass chattingUser, MyUserClass currentUser, bool isMatch) async {
     return await _userRepository.matchWith(chattingUser, currentUser, isMatch);
   }
+
+  Future<bool> removeMatch(String talkingTo, String chatOwner) async {
+    return await _userRepository.removeMatch(talkingTo, chatOwner);
+  }
 }
