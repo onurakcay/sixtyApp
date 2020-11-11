@@ -1,5 +1,6 @@
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -7,6 +8,7 @@ import 'package:sixtyseconds/Color/colors.dart';
 import 'package:sixtyseconds/CommonWidgets/platform_based_alert_dialog.dart';
 import 'package:sixtyseconds/Model/message.dart';
 import 'package:sixtyseconds/Model/user.dart';
+import 'package:sixtyseconds/admob.dart';
 import 'package:sixtyseconds/viewModel/userModel.dart';
 
 class Sohbet extends StatefulWidget {
@@ -29,8 +31,18 @@ class _SohbetState extends State<Sohbet> {
   // bool _isLocked = true;
   bool _isYourTurn = true;
   var isFalse;
-
+  InterstitialAd myInterstitialAd;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  void dispose() {
+    myInterstitialAd.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     MyUserClass _currentUser = widget.currentUser;
@@ -345,6 +357,10 @@ class _SohbetState extends State<Sohbet> {
           ).goster(context);
           print("RESULT: " + result.toString());
           if (result) {
+            myInterstitialAd = admob.buildInterstitialAd();
+            myInterstitialAd
+              ..load()
+              ..show();
             Navigator.pop(context);
           }
         },
@@ -430,6 +446,10 @@ class _SohbetState extends State<Sohbet> {
           print("RESULT: " + result.toString());
           if (result) {
             Navigator.pop(context);
+            myInterstitialAd = admob.buildInterstitialAd();
+            myInterstitialAd
+              ..load()
+              ..show();
           }
         } else {
           bool result = await PlatformBasedAlertDialog(
