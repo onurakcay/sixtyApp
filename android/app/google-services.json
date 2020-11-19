@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:1096361749988:android:ff7802f88ba53b92d56bf1",
         "android_client_info": {
-          "package_name": "com.example.sixtyseconds"
+          "package_name": "com.ofis91.sixtyseconds"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "1096361749988-43iek94nk75nqnll69hr2j34a6kjd2k5.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.sixtyseconds",
+            "package_name": "com.ofis91.sixtyseconds",
             "certificate_hash": "4046a403bff0da56a8fd858c1297e49c31911470"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "1096361749988-kn2m9ri23ge1te7930g88rs6m0q7ddl8.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.sixtyseconds",
+            "package_name": "com.ofis91.sixtyseconds",
             "certificate_hash": "f6a616eda19c97d484ede183641ec7276c675a85"
           }
         },
@@ -51,7 +51,7 @@
               "client_id": "1096361749988-6269lj733mots2sc6aoo58df1gpi09d3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.sixtyseconds"
+                "bundle_id": "com.ofis91.sixtyseconds"
               }
             }
           ]

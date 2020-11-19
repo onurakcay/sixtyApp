@@ -211,7 +211,7 @@ class UserRepository implements AuthBase {
         }
         if (token != null) {
           await _sendNotificationService.sendNotification(
-              saveMessage, currentUser, token);
+              saveMessage, currentUser, token, isMatch);
         }
         return true;
       } else {

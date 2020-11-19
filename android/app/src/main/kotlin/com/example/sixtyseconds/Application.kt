@@ -1,4 +1,4 @@
-package com.example.sixtyseconds;
+package com.ofis91.sixtyseconds;
 
 import io.flutter.app.FlutterApplication
 import io.flutter.plugin.common.PluginRegistry

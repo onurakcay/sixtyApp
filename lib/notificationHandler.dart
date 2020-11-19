@@ -117,6 +117,7 @@ class NotificationHandler {
         CupertinoPageRoute(
           builder: (context) => Sohbet(
             currentUser: _userModel.user,
+            isChatted: gelenBildirim['data']['isMatch'],
             chattingUser: MyUserClass.idveResim(
                 userID: gelenBildirim['data']['gonderenUserID'],
                 profileURL: gelenBildirim['data']['profilUrl'],

@@ -3,8 +3,8 @@ import 'package:sixtyseconds/Model/user.dart';
 import 'package:http/http.dart' as http;
 
 class SendNotificationService {
-  Future<bool> sendNotification(
-      Message notificationToSend, MyUserClass sentUser, String token) async {
+  Future<bool> sendNotification(Message notificationToSend,
+      MyUserClass sentUser, String token, bool isMatch) async {
     String endURL = "https://fcm.googleapis.com/fcm/send";
     String firebaseKey =
         "AAAA_0RAreQ:APA91bEiut9PoyjAyJY4biyZB4oG05ZJmF4qD8Q-9psLSQi98tgcn7foMkUh53k2N2UZD-rJW_YRPB_Yv-2aMCja6zkhRBE_mwwNStPk8EdDcetG_zBYLLtv5rPi7uJ92_rTr8pSGJwF";
@@ -13,7 +13,8 @@ class SendNotificationService {
       "Authorization": "key=$firebaseKey"
     };
     String json =
-        '{"to":"$token","data":{"message":"${notificationToSend.message}","title":"${sentUser.userName} sana bir mesaj gönderdi","profilURL":"${sentUser.profileURL}","gonderenUserID":"${sentUser.userID}"}}';
+        '{"to":"$token","data":{"message":"${notificationToSend.message}","title":"${sentUser.userName} sana bir mesaj gönderdi","profilURL":"${sentUser.profileURL}","gonderenUserID":"${sentUser.userID}","isMatch":$isMatch}}';
+    print("JSON:" + json);
 
     http.Response response =
         await http.post(endURL, headers: header, body: json);

@@ -1,4 +1,4 @@
-package com.example.sixtyseconds
+package com.ofis91.sixtyseconds
 
 import io.flutter.embedding.android.FlutterActivity
 

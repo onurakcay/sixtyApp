@@ -14,7 +14,7 @@ import 'package:sixtyseconds/viewModel/userModel.dart';
 class Sohbet extends StatefulWidget {
   final MyUserClass currentUser;
   final MyUserClass chattingUser;
-  final bool isChatted;
+  final String isChatted;
 
   Sohbet({this.currentUser, this.chattingUser, this.isChatted});
 
@@ -47,7 +47,13 @@ class _SohbetState extends State<Sohbet> {
   Widget build(BuildContext context) {
     MyUserClass _currentUser = widget.currentUser;
     MyUserClass _chattingUser = widget.chattingUser;
-    bool _isChatted = widget.isChatted;
+    bool _isChatted;
+    if (widget.isChatted == "true") {
+      _isChatted = true;
+    } else {
+      _isChatted = false;
+    }
+
     int stop = 0;
     if (_isChatted == null) {
       _isChatted = false;
@@ -68,15 +74,15 @@ class _SohbetState extends State<Sohbet> {
           title: _isChatted
               ? Text(_chattingUser.userName)
               : Text(_chattingUser.userName),
-          actions: [
-            Visibility(
-              visible: _isChatted ? false : true,
-              child: generalTimerCountdown(_isChatted),
-            ),
-            !_isChatted
-                ? timerCountdown(_isChatted)
-                : profilePicture(_chattingUser),
-          ],
+          // actions: [
+          //   Visibility(
+          //     visible: _isChatted ? false : true,
+          //     child: generalTimerCountdown(_isChatted),
+          //   ),
+          //   !_isChatted
+          //       ? timerCountdown(_isChatted)
+          //       : profilePicture(_chattingUser),
+          // ],
         ),
         body: Center(
           child: Column(children: [
@@ -140,7 +146,7 @@ class _SohbetState extends State<Sohbet> {
                       decoration: InputDecoration(
                         fillColor: Colors.white,
                         filled: true,
-                        hintText: "Mesaj Gönderrrrrr",
+                        hintText: "Mesaj Gönder",
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                             borderSide: BorderSide.none),
@@ -160,15 +166,11 @@ class _SohbetState extends State<Sohbet> {
                         color: Colors.white,
                       ),
                       onPressed: () async {
-                        print("isyoutrturn: " +
-                            _isYourTurn.toString() +
-                            " isChatted: " +
-                            _isChatted.toString());
                         if (_isYourTurn && !_isChatted) {
                           _timerController.restart();
                           _isYourTurn = false;
                         }
-                        var isMatch = _isChatted ? true : false;
+                        bool isMatch = _isChatted ? true : false;
                         var _messageToSent = _messageController.text;
                         if (_messageController.text.trim().length > 0) {
                           _messageController.clear();

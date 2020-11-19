@@ -46,7 +46,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.sixtyseconds"
+        applicationId "com.ofis91.sixtyseconds"
         minSdkVersion 17
         multiDexEnabled true
         targetSdkVersion 30

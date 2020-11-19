@@ -225,7 +225,7 @@ class _KonusmalarimTabState extends State<KonusmalarimTab> {
                                 userID: currentChat.talking_to,
                                 profileURL: currentChat.chattingProfilePicture,
                                 userName: currentChat.chattingUsername),
-                            isChatted: isChatted,
+                            isChatted: isChatted.toString(),
                           )));
             },
             child: GestureDetector(
