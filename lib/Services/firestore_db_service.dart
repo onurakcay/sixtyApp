@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter_login_facebook/flutter_login_facebook.dart';
 import 'package:sixtyseconds/Model/chat_model.dart';
 import 'package:sixtyseconds/Model/message.dart';
 import 'package:sixtyseconds/Model/user.dart';
@@ -244,13 +245,25 @@ class FireStoreDbService implements DbBase {
         .doc(_messageID)
         .set(_savingMessageMapStructure);
 
-    await _fireStore.collection("chats").doc(_receiverDocID).set({
-      "chat_owner": saveMessage.to,
-      "talking_to": saveMessage.from,
-      "last_sent_message": saveMessage.message,
-      "seen": false,
-      "created_at": Timestamp.now()
-    });
+    if (!isMatch) {
+      await _fireStore.collection("chats").doc(_receiverDocID).set({
+        "chat_owner": saveMessage.to,
+        "talking_to": saveMessage.from,
+        "last_sent_message": saveMessage.message,
+        "seen": false,
+        "isMatch": FacebookLoginStatus.Success,
+        "created_at": Timestamp.now()
+      });
+    } else {
+      await _fireStore.collection("chats").doc(_receiverDocID).set({
+        "chat_owner": saveMessage.to,
+        "talking_to": saveMessage.from,
+        "last_sent_message": saveMessage.message,
+        "seen": false,
+        "isMatch": true,
+        "created_at": Timestamp.now()
+      });
+    }
 
     return true;
   }

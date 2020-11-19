@@ -177,6 +177,7 @@ class _SohbetState extends State<Sohbet> {
                               to: _chattingUser.userID,
                               fromMe: true,
                               message: _messageToSent);
+                          print("isMatch: " + isMatch.toString());
                           var sonuc = await _userModel.saveMessage(
                               _saveMessage, _currentUser, isMatch);
                           if (sonuc) {
