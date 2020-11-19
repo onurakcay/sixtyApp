@@ -120,7 +120,7 @@ class NotificationHandler {
             isChatted: gelenBildirim['data']['isMatch'],
             chattingUser: MyUserClass.idveResim(
                 userID: gelenBildirim['data']['gonderenUserID'],
-                profileURL: gelenBildirim['data']['profilUrl'],
+                profileURL: gelenBildirim['data']['profilURL'],
                 userName: gelenBildirim['data']['gonderenUserID']),
           ),
         ),

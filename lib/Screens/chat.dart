@@ -259,9 +259,9 @@ class _SohbetState extends State<Sohbet> {
           children: [
             Row(
               children: [
-                // CircleAvatar(
-                //   backgroundImage: NetworkImage(widget.chattingUser.profileURL),
-                // ),
+                CircleAvatar(
+                  backgroundImage: NetworkImage(widget.chattingUser.profileURL),
+                ),
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.all(10),
