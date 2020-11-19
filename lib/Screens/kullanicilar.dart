@@ -164,6 +164,7 @@ class _KullanicilarTabState extends State<KullanicilarTab> {
           builder: (context) => Sohbet(
                 currentUser: _userModel.user,
                 chattingUser: pickedUser,
+                isChatted: "false",
               )));
     }
   }

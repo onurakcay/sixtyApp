@@ -74,15 +74,15 @@ class _SohbetState extends State<Sohbet> {
           title: _isChatted
               ? Text(_chattingUser.userName)
               : Text(_chattingUser.userName),
-          // actions: [
-          //   Visibility(
-          //     visible: _isChatted ? false : true,
-          //     child: generalTimerCountdown(_isChatted),
-          //   ),
-          //   !_isChatted
-          //       ? timerCountdown(_isChatted)
-          //       : profilePicture(_chattingUser),
-          // ],
+          actions: [
+            Visibility(
+              visible: _isChatted ? false : true,
+              child: generalTimerCountdown(_isChatted),
+            ),
+            !_isChatted
+                ? timerCountdown(_isChatted)
+                : profilePicture(_chattingUser),
+          ],
         ),
         body: Center(
           child: Column(children: [
@@ -259,9 +259,9 @@ class _SohbetState extends State<Sohbet> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  backgroundImage: NetworkImage(widget.chattingUser.profileURL),
-                ),
+                // CircleAvatar(
+                //   backgroundImage: NetworkImage(widget.chattingUser.profileURL),
+                // ),
                 Flexible(
                   child: Container(
                     padding: EdgeInsets.all(10),
