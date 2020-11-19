@@ -71,9 +71,7 @@ class _SohbetState extends State<Sohbet> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: _isChatted
-              ? Text(_chattingUser.userName)
-              : Text(_chattingUser.userName),
+          title: _isChatted ? Text(_chattingUser.userName) : Text("Anonim"),
           actions: [
             Visibility(
               visible: _isChatted ? false : true,
