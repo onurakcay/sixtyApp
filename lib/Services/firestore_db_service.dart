@@ -306,7 +306,7 @@ class FireStoreDbService implements DbBase {
     print("QUERY SNAPHOT : " + _querySnapshot.toString());
     for (DocumentSnapshot snap in _querySnapshot.docs) {
       Chat _tekChat = Chat.fromMap(snap.data());
-      print("QUERY SNAPHOT : " + _tekChat.toString());
+      print("Getirilen chatlar: " + _tekChat.toString());
       _allChats.add(_tekChat);
     }
     return _allChats;
